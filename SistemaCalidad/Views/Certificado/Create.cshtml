@@ -1,0 +1,449 @@
+﻿@model SistemaCalidad.Models.Certificado
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "CREATE";
+}
+@section Migas{
+    <li><a asp-action="Index" onclick="cargando()">Certificados</a></li>
+    <li class="active">Crear </li>
+}
+
+<link rel="stylesheet" type="text/css" href="~/lib/bootstrap-fileinput/css/fileinput.min.css">
+
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-9 margin-top-0">
+        <h1 class="page-title text-align-center txt-color-blueDark">
+            <b>   &nbsp;</b>
+        </h1>
+    </div>
+    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-3 margin-top-0">
+        <ul id="sparks">
+            <li class="sparks-info">
+                <a class="btn btn-primary" onclick="cargando()" asp-action="Index"><i class="fa fa-arrow-left"></i> Regresar </a>
+            </li>
+        </ul>
+    </div>
+    @{var user = await UserManager.FindByEmailAsync(User.Identity.Name);}
+</div>
+
+
+
+<section id="widget-grid" class="">
+    <div class="row">
+        <article class="col-sm-12 col-md-12 col-lg-12">
+            <div class="jarviswidget" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false">
+                <header>
+                    <span class="widget-icon">
+                        <i class="fa fa-edit"></i>
+                    </span>
+                    <h2>Generar Certificado </h2>
+                </header>
+                <div>
+                    <div class="jarviswidget-editbox">
+                    </div>
+                    <div class="widget-body">
+                        <form class="" asp-action="Create" method="post" enctype="multipart/form-data">
+                            <input asp-for="CertificadoId" value="@Model.CertificadoId" type="hidden" />
+                            <input asp-for="Estado" value="@Model.Estado" type="hidden" />
+                            <input asp-for="Liberado" value="@Model.Liberado" type="hidden" />
+
+
+                            <fieldset>
+
+                                <div class="col col-lg-3">
+                                    <label class="input-group">Tipo de Certificado:</label>
+                                    <div class="input">
+                                        <select asp-for="Tipo" class="form-control select2">
+                                            <option value="1">&nbsp;Nacional</option>
+                                            <option value="2">&nbsp;Internacional</option>
+                                            <option value="3">&nbsp;Internacional (México)</option>
+                                            <option value="4">&nbsp;Ingl&eacute;s</option>
+                                        </select>
+                                        <span id="mTurno" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+
+
+                                <div class=" col col-lg-2">
+                                    <label class="input-group">Fecha:</label>
+                                    <label class="input-group">
+                                        <input type="datetime" readonly asp-for="FechaGeneracion" placeholder="Ingrese la fecha" class="datepicker form-control" data-dateformat="dd/mm/yy">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <b class="tooltip tooltip-bottom-right">Ingrese la fecha</b>
+
+                                    </label>
+                                    <span asp-validation-for="FechaGeneracion" class="text-danger"></span>
+                                </div>
+                                <div class="col col-sm-5">
+                                    <label class="input-group">Producto Final:</label>
+                                    <div class="input">
+                                        <select asp-for="ProductoFinalId" class="form-control select2" asp-items="ViewBag.IdProductoFinal">
+                                            <option value="0">---N/A---</option>
+                                        </select>
+                                        <span id="mClienteId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col col-sm-2">
+                                    <label class="input-group">N&uacute;mero de Orden Final :</label>
+                                    <div class="input">
+                                        <input asp-for="OrdenFinal" class="form-control"></input>
+                                        <span asp-validation-for="OrdenFinal" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <br />
+                                <div class="col col-sm-5">
+                                    <label class="input-group">Cliente:</label>
+                                    <div class="input">
+                                        <select asp-for="NombreCliente" class="form-control select2" asp-items="ViewBag.IdCliente"></select>
+                                        <span id="mClienteId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col col-sm-7">
+                                    <label>N&uacute;meros de Ordenes Intermedio</label>
+                                    <select asp-for="ListaOrdenes" multiple style="width: 100%" class="select2" asp-items="ViewBag.OrdenesId"></select>
+                                    <span asp-validation-for="ListaOrdenes" class="text-danger"></span>
+                                    <br />
+                                </div>
+                                
+                            </fieldset>
+
+                            <fieldset>
+                                <div class="col col-lg-12">
+                                    <br />
+                                    <legend class="col col-lg-12">Par&aacute;metros del Tipo de Certificado</legend>
+                                </div>
+                                <div class="row col col-lg-12">
+                                    <div id="DivNumeroGuia" class="col col-lg-4">
+                                        <label class="input-group">N&uacute;mero de Gu&iacute;a:</label>
+                                        <label class="input-group">
+                                            <input type="text" asp-for="NumeroGuia" placeholder="Ingrese el Número de Guía" class="form-control">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-edit"></i>
+                                            </span>
+                                            <b class="tooltip tooltip-bottom-right">Ingrese la fecha</b>
+
+                                        </label>
+                                        <span asp-validation-for="NumeroGuia" class="text-danger"></span>
+                                        <br />
+                                    </div>
+                                    <div id="DivOrdenVenta" class=" col col-lg-4">
+                                        <label class="input-group">Orden de Venta:</label>
+                                        <label class="input-group">
+                                            <input type="text" asp-for="OrdenVenta" placeholder="Ingrese el Orden de Venta" class="form-control">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-edit"></i>
+                                            </span>
+                                            <b class="tooltip tooltip-bottom-right">Ingrese la fecha</b>
+                                        </label>
+                                        <span asp-validation-for="OrdenVenta" class="text-danger"></span>
+                                    </div>
+                                    <div id="DivPedidoVenta" class=" col col-lg-4">
+                                        <label class="input-group">Pedido de Venta:</label>
+                                        <label class="input-group">
+                                            <input type="text" asp-for="PedidoVenta" placeholder="Ingrese el Pedido de Venta" class="form-control">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-edit"></i>
+                                            </span>
+                                            <b class="tooltip tooltip-bottom-right">Ingrese la fecha</b>
+                                        </label>
+                                        <span asp-validation-for="PedidoVenta" class="text-danger"></span>
+                                    </div>
+
+                                    <div id="DivNumeroFactura" class=" col col-lg-4">
+                                        <label class="input-group">Número de Factura:</label>
+                                        <label class="input-group">
+                                            <input type="text" asp-for="NumeroFactura" placeholder="Ingrese el Número de Factura" class="form-control">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-edit"></i>
+                                            </span>
+                                            <b class="tooltip tooltip-bottom-right">Ingrese la  Número de Factura</b>
+                                        </label>
+                                        <span asp-validation-for="NumeroFactura" class="text-danger"></span>
+                                    </div>
+
+                                    <div id="DivPartidaArancelaria" class=" col col-lg-4">
+                                        <label class="input-group">Partida Arancelaria:</label>
+                                        <label class="input-group">
+                                            <input type="text" asp-for="PartidaArancelaria" placeholder="Ingrese la Partida Arancelaria" class="form-control">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-edit"></i>
+                                            </span>
+                                            <b class="tooltip tooltip-bottom-right">Ingrese la Partida Arancelaria</b>
+                                        </label>
+                                        <span asp-validation-for="PartidaArancelaria" class="text-danger"></span>
+                                    </div>
+
+                                    <div id="DivReferencia" class=" col col-lg-4">
+                                        <label class="input-group">Referencia:</label>
+                                        <label class="input-group">
+                                            <input type="text" asp-for="Referencia" placeholder="Ingrese la referencia" class="form-control">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-edit"></i>
+                                            </span>
+                                            <b class="tooltip tooltip-bottom-right">Ingrese la Referencia</b>
+                                        </label>
+                                        <span asp-validation-for="Referencia" class="text-danger"></span>
+                                    </div>
+
+                                    <div id="DivOrdenCliente" class=" col col-lg-4">
+                                        <label class="input-group">Orden del Cliente:</label>
+                                        <label class="input-group">
+                                            <input type="text" asp-for="OrdenCliente" placeholder="Ingrese la orden del cliente" class="form-control">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-edit"></i>
+                                            </span>
+                                            <b class="tooltip tooltip-bottom-right">Ingrese la orden del cliente</b>
+                                        </label>
+                                        <span asp-validation-for="OrdenCliente" class="text-danger"></span>
+                                    </div>
+
+                                </div>
+
+                                <div class="row col col-lg-12">
+                                    <div id="DivValor" class=" col col-lg-4">
+                                        <label class="input-group">Valor:</label>
+                                        <label class="input-group">
+                                            <input type="number" asp-for="Valor" placeholder="Ingrese el Valor" class="form-control">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-edit"></i>
+                                            </span>
+                                            <b class="tooltip tooltip-bottom-right">Ingrese la fecha</b>
+                                        </label>
+                                        <span asp-validation-for="Valor" class="text-danger"></span>
+                                    </div>
+                                    <div id="DivPeso" class=" col col-lg-4">
+                                        <label class="input-group">Peso:</label>
+                                        <label class="input-group">
+
+                                            <input type="number" asp-for="Peso" placeholder="Ingrese el Peso" class="form-control">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-edit"></i>
+                                            </span>
+                                            <b class="tooltip tooltip-bottom-right">Ingrese la fecha</b>
+                                        </label>
+                                        <span asp-validation-for="Peso" class="text-danger"></span>
+                                    </div>
+
+                                    <div id="DivMateriaPrima" class=" col col-lg-4">
+                                        <section class="col col-lg-12">
+                                            <label>¿ Mostrar Materia Prima ?</label>
+                                            <br />
+                                            <span class="onoffswitch">
+                                                <input type="checkbox" checked="@Model.VerMateriaPrima" asp-for="VerMateriaPrima" class="onoffswitch-checkbox" id="st11(@Model.VerMateriaPrima)">
+                                                <label class="onoffswitch-label" asp-for="VerMateriaPrima" for="st11(@Model.VerMateriaPrima)">
+                                                    <span class="onoffswitch-inner" data-swchon-text="Si" data-swchoff-text="No"></span>
+                                                    <span class="onoffswitch-switch">
+                                                    </span>
+                                                </label>
+                                            </span>
+                                        </section>
+                                    </div>
+
+                                </div>
+                            </fieldset>
+
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button id="btn-guardar" class="btn btn-primary" type="submit">
+                                            <i class="fa fa-arrow-right"></i>
+                                            Siguiente
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                    <!-- end widget content -->
+
+                </div>
+                <!-- end widget div -->
+
+            </div>
+            <!-- end widget -->
+
+        </article>
+    </div>
+</section>
+<!-- /.modal -->
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src='~/lib/bootstrap-fileinput/js/fileinput.min.js'></script>
+    <script src='~/lib/bootstrap-fileinput/js/locales/es.js'></script>
+
+    <script>
+        mostrarElementos();
+
+        $("#Tipo").change(function () {
+            mostrarElementos();
+        });
+
+
+        function mostrarElementos() {
+            mostrarLoadingPanel("content", "");
+            var tipo = $("#Tipo").val();
+
+            if (tipo == 1) {
+               
+                $("#Valor").val("");
+                $("#Peso").val("");
+                $("#OrdenVenta").val("");
+                $("#PedidoVenta").val("");
+                $("#OrdenCliente").val("");
+                $("#Referencia").val("");
+                $("#PedidoVenta").val("");
+                $("#PartidaArancelaria").val("");
+                $("#NumeroFactura").val("");
+
+
+                $("#DivNumeroGuia").show();
+                $("#DivNumeroFactura").hide();
+                $("#DivPartidaArancelaria").hide();
+                $("#DivOrdenCliente").hide();
+                $("#DivReferencia").hide();
+                $("#DivValor").hide();
+                $("#DivPeso").hide();
+                $("#DivOrdenVenta").hide();
+                $("#DivPedidoVenta").hide();
+                
+            }
+            if (tipo == 2) {
+
+                $("#Valor").val("");
+                $("#Peso").val("");
+                $("#OrdenCliente").val("");
+                $("#Referencia").val("");
+                $("#NumeroGuia").val("");
+                $("#PartidaArancelaria").val("");
+                $("#NumeroFactura").val("");
+
+
+                $("#DivOrdenVenta").show();
+                $("#DivPedidoVenta").show();
+                $("#DivNumeroGuia").hide();
+                $("#DivNumeroFactura").hide();
+                $("#DivPartidaArancelaria").hide();
+                $("#DivOrdenCliente").hide();
+                $("#DivReferencia").hide();
+                $("#DivValor").hide();
+                $("#DivPeso").hide();
+
+            }
+            if (tipo == 3) {
+
+             
+                $("#OrdenCliente").val("");
+                $("#Referencia").val("");
+                $("#NumeroGuia").val("");
+
+                $("#DivOrdenVenta").show();
+                $("#DivPedidoVenta").show();
+                $("#DivValor").show();
+                $("#DivPeso").show();
+                $("#DivNumeroFactura").show();
+                $("#DivPartidaArancelaria").show();
+                $("#DivNumeroGuia").hide();
+                $("#DivOrdenCliente").hide();
+                $("#DivReferencia").hide();
+              
+            }
+            if (tipo == 4) {
+
+
+                $("#DivNumeroGuia").show();
+                $("#DivOrdenCliente").show();
+                $("#DivReferencia").show();
+                $("#DivOrdenVenta").show();
+                $("#DivPedidoVenta").show();
+                $("#DivValor").show();
+                $("#DivPeso").show();
+                $("#DivNumeroFactura").show();
+                $("#DivPartidaArancelaria").show();
+            }
+
+            $("#content").waitMe("hide");
+        };
+
+
+        $("#file").fileinput({
+            showUpload: false,
+            dropZoneEnabled: false,
+            maxFileCount: 1,
+            language: 'es',
+            elErrorContainer: '#kartik-file-errors',
+            allowedFileExtensions: ["pdf"]
+        });
+
+    </script>
+    <script type="text/javascript">
+        /* DO NOT REMOVE : GLOBAL FUNCTIONS!
+     *
+     * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
+     *
+     * // activate tooltips
+     * $("[rel=tooltip]").tooltip();
+     *
+     * // activate popovers
+     * $("[rel=popover]").popover();
+     *
+     * // activate popovers with hover states
+     * $("[rel=popover-hover]").popover({ trigger: "hover" });
+     *
+     * // activate inline charts
+     * runAllCharts();
+     *
+     * // setup widgets
+     * setup_widgets_desktop();
+     *
+     * // run form elements
+     * runAllForms();
+     *
+     ********************************
+     *
+     * pageSetUp() is needed whenever you load a page.
+     * It initializes and checks for all basic elements of the page
+     * and makes rendering easier.
+     *
+     */
+
+        pageSetUp();
+
+            /*
+             * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
+             * eg alert("my home function");
+             *
+             * var pagefunction = function() {
+             *   ...
+             * }
+             * loadScript("/js/plugin/_PLUGIN_NAME_.js", pagefunction);
+             *
+             * TO LOAD A SCRIPT:
+             * var pagefunction = function (){
+             *  loadScript(".../plugin.js", run_after_loaded);
+             * }
+             *
+             * OR
+             *
+             * loadScript(".../plugin.js", run_after_loaded);
+             */
+
+            // pagefunction
+
+
+
+            // end destroy
+
+            // run pagefunction
+
+
+    </script>
+
+}

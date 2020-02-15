@@ -1,0 +1,143 @@
+@inject IOptions<SmartSettings> Settings
+@inject UserManager<ApplicationUser> UserManager
+@using SistemaCalidad.Extensions
+<!-- Left panel : Navigation area -->
+<!-- Note: This width of the aside area can be adjusted through LESS variables -->
+<aside id="left-panel">
+    <!-- User info -->
+    <div class="login-info">
+        <span>
+            <a href="javascript:void(0);">
+                @{var user = await UserManager.FindByEmailAsync(User.Identity.Name);}
+                <span class="col col-lg-12">@user.Name @user?.LastName</span>
+            </a>
+        </span>
+    </div>
+    <nav>
+        <ul>
+            <li is-active-route asp-controller="Users">
+                <a href="#" title="Administrar">
+                    <i class="fa fa-lg fa-fw fa-lock"></i> <span class="menu-item-parent"> Seguridades</span>
+                </a>
+                <ul>
+                    <li is-active-route asp-controller="Account" asp-action="Index">
+                        <a asp-controller="Users" asp-action="Index" title="Usuarios">
+                            <i class=""></i> <span>Usuarios</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li is-active-route asp-controller="Manage">
+                <a href="#" title="Maestros">
+                    <i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent"> Maestros</span>
+                </a>
+                <ul>
+                    <li is-active-route asp-controller="Especificaciones">
+                        <a asp-controller="Especificacion" asp-action="Index" title="Especificaciones">
+                            <span class="">Especificaci&oacute;n</span>
+                        </a>
+                    </li>
+
+                    <li is-active-route asp-controller="Productos">
+                        <a href="#" title="Productos">
+                            <span class="">Productos     </span>
+                        </a>
+                        <ul>
+                            <li is-active-route asp-controller="Productos">
+                                <a asp-controller="ClaseProducto" asp-action="Index" title="Clase Producto">
+                                    <span class="">Clase Producto      </span>
+                                </a>
+                            </li>
+                            <li is-active-route asp-controller="Productos">
+                                <a asp-controller="Productos" asp-action="Index" title="Producto">
+                                    <span class="">Producto      </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li is-active-route asp-controller="Materiales">
+                        <a href="#" title="Materiales">
+                            <span class="">Materiales      </span>
+                        </a>
+                        <ul>
+                            <li is-active-route asp-controller="Materiales">
+                                <a asp-controller="TipoNorma" asp-action="Index" title="Tipo de Norma">
+                                    <span class="">Tipo Norma    </span>
+                                </a>
+                            </li>
+                            <li is-active-route asp-controller="TipoMaterial">
+                                <a asp-controller="TipoMaterial" asp-action="Index" title="Tipo de Material">
+                                    <span class="">Tipo Material</span>
+                                </a>
+                            </li>
+                            <li is-active-route asp-controller="Materiales">
+                                <a asp-controller="Materiales" asp-action="Index" title="Material">
+                                    <span class="">Material    </span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li is-active-route asp-controller="Proveedors">
+                        <a asp-controller="Proveedors" asp-action="Index" title="Proveedores">
+                            <span class="">Proveedores</span>
+                        </a>
+                    </li>
+
+
+                    <li is-active-route asp-controller="Clientes">
+                        <a asp-controller="Clientes" asp-action="Index" title="Clientes">
+                            <span class="">Clientes</span>
+                        </a>
+                    </li>
+
+
+                    <li is-active-route asp-controller="Maquinas">
+                        <a asp-controller="Maquinas" asp-action="Index" title="M&aacute;quinas">
+                            <span class="">M&aacute;quinas</span>
+                        </a>
+                    </li>
+
+                    <li is-active-route asp-controller="Pais">
+                        <a asp-controller="Pais" asp-action="Index" title="Paises">
+                            <span class="">Paises</span>
+                        </a>
+                    </li>
+
+
+                </ul>
+            </li>
+            <li is-active-route asp-controller="Analisis">
+                <a href="#" title="Analisis">
+                    <i class="fa fa-lg fa-fw fa-search"></i> <span class="">An&aacute;lisis</span>
+                </a>
+                <ul>
+                    <li is-active-route asp-controller="Analisis" asp-action="Index">
+                        <a asp-controller="Analisis" asp-action="Index" title="Resultados">
+                            <span>Resultados</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
+            <li is-active-route asp-controller="Graphs">
+                <a href="#">
+                    <i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">Reportes</span>
+                </a>
+                <ul>
+                    <li is-active-route asp-controller="Analisis" asp-action="Index">
+                        <a asp-controller="Analisis" asp-action="Index" title="Materias primas que aplican a un producto">
+                            <span>Material</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+        </ul>
+    </nav>
+   
+</aside>
+<!-- END NAVIGATION -->

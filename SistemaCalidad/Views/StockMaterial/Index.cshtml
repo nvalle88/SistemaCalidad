@@ -1,0 +1,360 @@
+﻿@model SistemaCalidad.Models.BussinessViewModels.StockMaterialViewModel
+@section Migas{
+    <li><a asp-action="Index" onclick="cargando()">Materia Prima</a></li>
+    <li class="active">Stock</li>
+}
+
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-9 margin-top-0">
+        <h1 class="page-title text-align-center txt-color-blueDark">
+            <b> Detalle del Stock</b>
+        </h1>
+    </div>
+    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-3 margin-top-0">
+        <ul id="sparks">
+            <li class="sparks-info">
+                <a class="btn btn-primary" onclick="cargando()" asp-action="Index" asp-controller="Home"><i class="fa fa-home"></i> Inicio </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="col-sm-7 margin-top-0">
+        <div class="well no-padding">
+            <form asp-action="Especificaciones" method="post" novalidate="novalidate" class="smart-form client-form">
+                <header>
+                    @ViewData["accion"] Stock
+                </header>
+                <fieldset>
+                    <section>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    </section>
+                    <div class="col-lg-12">
+                        <section class="col col-lg-12">
+                            <label class="label">Material</label>
+                            <div class="form-group">
+                                <div class="input">
+                                    <select asp-for="MaterialId" class="form-control select2" asp-items="ViewBag.IdMaterial"></select>
+                                    <span asp-validation-for="MaterialId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-lg-12" id="divNumero">
+                        <section class="col col-lg-12">
+                            <label class="label">Valor</label>
+                            <label class="input">
+                                <i class="icon-append fa fa-pencil-square-o"></i>
+                                <input type="number" asp-for="StockResta" placeholder="Valor">
+                                <b class="tooltip tooltip-bottom-right">Ingrese el valor</b>
+                                <span asp-validation-for="StockResta" class="text-danger"></span>
+                            </label>
+                        </section>
+                        <section class="col col-lg-12">
+                            <div class="radio">
+                                <label><input type="radio" name="optradio" checked value="-1"><i></i>Consumo</label>
+                            </div>
+                            <div class="radio">
+                                <label><input type="radio" name="optradio" value="1"><i></i>Recepci&oacute;n</label>
+                            </div>
+                        </section>
+                    </div>
+                </fieldset>
+                <footer>
+                    <a  id="btn-guardar" onclick="guardar()" class="btn btn-primary">
+                        Guardar
+                    </a>
+                </footer>
+            </form>
+
+        </div>
+    </div>
+    <div class="col-sm-5 margin-top-0">
+        <div class="well col-sm-12 no-padding">
+            <div class="col col-sm-12">
+                <div class="col-sm-12 margin-bottom-10 margin-top-10 product-content product-wrap clearfix">
+                    <legend>Material seleccionado</legend>
+                    <div class="product-deatil col col-lg-12 text-align-left JustifyFull">
+                        <h4 class="name">
+                            <b>
+                                <a href="#" id="stockDisponible">
+
+                                </a>
+                            </b>
+                        </h4>
+                        <h5 class="name">
+                            <a href="#" id="identificador">
+
+                            </a>
+                        </h5>
+                        <h5 class="name">
+                            <a href="#" id="sae">
+
+                            </a>
+                        </h5>
+                        <h5 class="name">
+                            <a href="#" id="unidadmedida">
+
+                            </a>
+                        </h5>
+                    </div>
+                    <br />
+                    <div class="col col-lg-12 text-align-center">
+                        <p class="price-container col-lg-6 margin-top-10 margin-bottom-10">
+                            <span>Proveedor</span>
+                            <br />
+                            <span id="proveedor"> </span>
+                        </p>
+                        <p class="price-container col-lg-6 margin-top-10 margin-bottom-10">
+                            <span>Pa&iacute;s</span><br />
+                            <span id="pais"> </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- /.modal -->
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script type="text/javascript">
+
+        var signo = -1;
+
+        $('input[type=radio][name=optradio]').change(function () {
+            if (this.value == 1) {
+                signo = 1;
+            }
+            else if (this.value == -1) {
+                signo = -1;
+            }
+        });
+
+        $(function () {
+            mostrarElementos();
+        });
+
+        $("#MaterialId").change(function () {
+
+            mostrarElementos()
+
+        });
+
+        function ValidarFormulario() {
+            var salida = true;
+
+           
+            if ($("#StockResta").val() <= 0) {
+                $("#StockResta").focus();
+                salida = false;
+            }
+            if ($("#StockResta").val() == "") {
+                $("#StockResta").focus();
+                salida = false;
+            }
+            return salida;
+        };
+
+        function guardar()
+        {
+            mostrarLoadingPanel("content", "");
+            if (ValidarFormulario() == false) {
+                event.preventDefault();
+                $("#content").waitMe("hide");
+                return;
+            }
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ActualizarStock")',
+                dataType: 'json',
+                data: { id: $("#MaterialId").val(), valor: $("#StockResta").val(), signo:signo },
+                success: function (data) {
+
+                    if (data == -1)
+                    {
+                        mostrarNotificacion("Error", "El valor no puede ser mayor que el Stock Disponible.")
+                        $("#content").waitMe("hide");
+                        return;
+                    }
+                    updateElementos(data);
+                    mostrarNotificacion("Satisfactorio", "El Stock se ha actualizado satisfactoriamente.")
+
+                }, complete: function (data) {
+                    $("#content").waitMe("hide");
+                },
+                error: function (ex) {
+                    mostrarNotificacion("Error", "El análisis no se ha podido insertar.")
+                }
+            });
+        }
+
+        function updateElementos(data)
+        {
+            $("#stockDisponible").html("Stock disponible:   " + parseFloat(data.stockDisponible).toFixed(5));
+            $("#identificador").html("INA:  " + data.identificador);
+            $("#sae").html("SAE:    " + data.sae);
+            $("#proveedor").html( data.proveedor.nombreProveedor);
+            $("#pais").html(data.pais.descripcionPais);
+            $("#unidadmedida").html("Unidad de Medida:    " + data.unidadMedida);
+            return;
+        }
+
+        function mostrarElementos()
+        {
+            mostrarLoadingPanel("content", "");
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetMaterial")',
+                dataType: 'json',
+                data: { id: $("#MaterialId").val() },
+                success: function (data) {
+                    updateElementos(data);
+                }, complete: function (data) {
+                    $("#content").waitMe("hide");
+                },
+                error: function (ex) {
+                    mostrarNotificacion("Error", "El análisis no se ha podido insertar.")
+                    location.href = '@Url.Action("Index")';
+                }
+            });
+        }
+
+
+        /* DO NOT REMOVE : GLOBAL FUNCTIONS!
+     *
+     * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
+     *
+     * // activate tooltips
+     * $("[rel=tooltip]").tooltip();
+     *
+     * // activate popovers
+     * $("[rel=popover]").popover();
+     *
+     * // activate popovers with hover states
+     * $("[rel=popover-hover]").popover({ trigger: "hover" });
+     *
+     * // activate inline charts
+     * runAllCharts();
+     *
+     * // setup widgets
+     * setup_widgets_desktop();
+     *
+     * // run form elements
+     * runAllForms();
+     *
+     ********************************
+     *
+     * pageSetUp() is needed whenever you load a page.
+     * It initializes and checks for all basic elements of the page
+     * and makes rendering easier.
+     *
+     */
+
+        pageSetUp();
+
+        /*
+         * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
+         * eg alert("my home function");
+         *
+         * var pagefunction = function() {
+         *   ...
+         * }
+         * loadScript("/js/plugin/_PLUGIN_NAME_.js", pagefunction);
+         *
+         */
+
+        // PAGE RELATED SCRIPTS
+
+        // pagefunction
+        var pagefunction = function () {
+            //console.log("cleared");
+
+            /* // DOM Position key index //
+
+                l - Length changing (dropdown)
+                f - Filtering input (search)
+                t - The Table! (datatable)
+                i - Information (records)
+                p - Pagination (paging)
+                r - pRocessing
+                < and > - div elements
+                <"#id" and > - div with an id
+                <"class" and > - div with a class
+                <"#id.class" and > - div with an id and class
+
+                Also see: http://legacy.datatables.net/usage/features
+            */
+
+            /* BASIC ;*/
+            var responsiveHelper_dt_basic = undefined;
+            var responsiveHelper_datatable_fixed_column = undefined;
+            var responsiveHelper_datatable_col_reorder = undefined;
+            var responsiveHelper_datatable_tabletools = undefined;
+
+            var breakpointDefinition = {
+                tablet: 1024,
+                phone: 480
+            };
+
+            $('#dt_basic').dataTable({
+                "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
+                    "t" +
+                    "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+                "oLanguage": {
+                    "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
+                },
+                "autoWidth": true,
+                "preDrawCallback": function () {
+                    // Initialize the responsive datatables helper once.
+                    if (!responsiveHelper_dt_basic) {
+                        responsiveHelper_dt_basic =
+                            new ResponsiveDatatablesHelper($('#dt_basic'), breakpointDefinition);
+                    }
+                },
+                "rowCallback": function (nRow) {
+                    responsiveHelper_dt_basic.createExpandIcon(nRow);
+                },
+                "drawCallback": function (oSettings) {
+                    responsiveHelper_dt_basic.respond();
+                }
+            });
+            $("div.toolbar")
+                .html(
+                    '<div class="text-right"><img src="/img/logo.png" alt="SmartAdmin" style="width: 111px; margin-top: 3px; margin-right: 10px;"></div>');
+
+            // Apply the filter
+            $("#datatable_fixed_column thead th input[type=text]").on('keyup change',
+                function () {
+
+                    otable
+                        .column($(this).parent().index() + ':visible')
+                        .search(this.value)
+                        .draw();
+
+                });
+        };
+
+        // load related plugins
+
+        loadScript("/js/plugin/datatables/jquery.dataTables.min.js",
+            function () {
+                loadScript("/js/plugin/datatables/dataTables.colVis.min.js",
+                    function () {
+                        loadScript("/js/plugin/datatables/dataTables.tableTools.min.js",
+                            function () {
+                                loadScript("/js/plugin/datatables/dataTables.bootstrap.min.js",
+                                    function () {
+                                        loadScript("/js/plugin/datatable-responsive/datatables.responsive.min.js",
+                                            pagefunction);
+                                    });
+                            });
+                    });
+            });
+
+
+    </script>
+}
+
+

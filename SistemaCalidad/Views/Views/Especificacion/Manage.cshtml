@@ -1,0 +1,89 @@
+﻿@model SistemaCalidad.Models.Especificacion
+<div class="row">
+   
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="well no-padding">
+
+            <form asp-action="Manage" method="post" novalidate="novalidate" class="smart-form client-form">
+                <header>
+                    @ViewData["accion"] Especificaci&oacute;n
+                </header>
+                @{
+                    if (Model != null)
+                    {
+                        <input type="hidden" asp-for="EspecificacionId" />
+                    }
+                }
+               
+                        <fieldset>
+                            <section>
+                                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                            </section>
+
+                            <section class="col col-lg-12">
+                                <label class="label">Descripci&oacute;n</label>
+                                <label class="input">
+                                    <i class="icon-append fa fa-pencil-square-o"></i>
+                                    <input type="text" asp-for="Descripcion" placeholder="Descripción">
+                                    <b class="tooltip tooltip-bottom-right">Ingrese la Descripci&oacute;n</b>
+                                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                                </label>
+                            </section>
+                            <section class="col col-lg-6">
+                                <label class="label">Clase</label>
+                                <div class="form-group">
+                                    <div class="input">
+                                        <select asp-for="ClaseEspecificacion" class="form-control select2">
+                                            <option value="General">General</option>
+                                            <option value="Barras y Pletinas">Barras y Pletinas</option>
+                                            <option value="Claveria">Claveria</option>
+                                            <option value="Mallas">Mallas</option>
+                                            <option value="Puas">Puas</option>
+                                            <option value="Química">Química</option>
+                                            <option value="Material">Material</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="col col-lg-6">
+                                <label class="label">Tipo</label>
+                                <div class="form-group">
+                                    <div class="input">
+                                        <select asp-for="TipoEspecificacion" class="form-control select2">
+                                            <option value="Rango">Rango</option>
+                                            <option value="Texto">Texto</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="col col-lg-12">
+                                <i></i>&nbsp; ¿ A&aacute;lisis ?
+                                <span class="onoffswitch">
+                                    <input type="checkbox" checked="@Model.Analisis" asp-for="Analisis" class="onoffswitch-checkbox" id="st11(@Model.Analisis)">
+                                    <label class="onoffswitch-label" asp-for="Analisis" for="st11(@Model.Analisis)">
+                                        <span class="onoffswitch-inner" data-swchon-text="Si" data-swchoff-text="No"></span>
+                                        <span class="onoffswitch-switch">
+                                        </span>
+                                    </label>
+                                </span>
+                            </section>
+                        </fieldset>
+
+                <footer>
+                    <button type="submit"  id="btn-guardar" class="btn btn-primary">
+                        Guardar
+                    </button>
+                    <a asp-action="Index" onclick="cargando()" class="btn btn-default"><strong> Cancelar </strong></a>
+                </footer>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- /.modal -->
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

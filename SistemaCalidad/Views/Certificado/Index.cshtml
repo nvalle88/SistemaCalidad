@@ -1,0 +1,309 @@
+﻿@model SistemaCalidad.Models.BussinessViewModels.CertificadoViewModel
+@using SistemaCalidad.Utils
+@{
+    ViewData["Title"] = "Index";
+}
+@section Migas{
+    <li><a asp-action="Index" onclick="cargando()">Certificados</a></li>
+    <li class="active">Listado de Certificados </li>
+}
+
+<form id="fmBuscar" method="post" novalidate="novalidate">
+    <div class="row col-12">
+
+        <div class="col-xs-10 col-sm-2 col-md-2 col col-lg-2">
+            <label></label>
+            <a asp-action="Create" onclick="cargando()" class="btn btn-primary btn-block" title="Ir a la pantalla de creación del certificado.">
+                <i class="fa fa-plus"></i>
+                <strong>Nuevo Certificado</strong>
+            </a>
+        </div>
+        <div class="col-xs-10 pull-right col-sm-2 col-md-2 col col-lg-4">
+            <div class="well padding-10">
+                <h5 class="margin-top-0"><b>    Tipo de Certificado</b><i class="pull-right fa fa-search"></i></h5>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul class="list-group no-margin">
+                            <li class="list-group-item">
+                                <div class="form-group">
+
+                                    <div class="input">
+                                        <select asp-for="Tipo" class="form-control select2">
+                                            <option value="1">&nbsp;Nacional</option>
+                                            <option value="2">&nbsp;Internacional</option>
+                                            <option value="3">&nbsp;Internacional (México)</option>
+                                            <option value="4">&nbsp;Ingl&eacute;s</option>
+                                        </select>
+                                        <span id="mTurno" class="text-danger"></span>
+                                    </div>
+
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-10 col-sm-10 col-md-10 col col-lg-10">
+
+        </div>
+    </div>
+</form>
+<!-- widget grid -->
+<section id="widget-grid" class="">
+    <!-- row -->
+    <div class="row">
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-deletebutton="false" data-widget-collapsed="false" data-widget-colorbutton="false" data-widget-editbutton="false">
+                <header>
+                    <span class="widget-icon">
+                        <i class="fa fa-table"></i>
+                    </span>
+                    <h2>Listado de Certificados</h2>
+
+                </header>
+                <div>
+                    <div class="jarviswidget-editbox">
+                    </div>
+                    <div class="widget-body no-padding">
+                        <table id="dt_basic" data-page-length="50" class="table table-striped table-bordered table-hover" width="100%">
+                            <thead>
+                                <tr>
+
+                                    <th hidden="hidden" class="col-lg-0" data-hide="phone" style="text-align:center"></th>
+                                    <th data-hide="phone" style="text-align:center"> C&oacute;digo de Certificado</th>
+                                    <th data-hide="phone" style="text-align:center">Fecha</th>
+                                    <th style="text-align:center">Producto Final</th>
+                                    <th data-hide="phone,tablet" style="text-align:center">N&uacute;mero de Orden Intermedio</th>
+                                    <th data-hide="phone,tablet" style="text-align:center">N&uacute;mero de Orden Final</th>
+                                    <th style="text-align:center">Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ListaCertificados.OrderByDescending(x => x.FechaGeneracion.Date).ThenByDescending(x => x.CertificadoId).ThenBy(x => x.Tipo))
+                                {
+                                    <tr @{ if (item.ArchivoCargado == false && item.Liberado == false) { <text> class="text-danger  danger" </text>  } else { @if (item.ArchivoCargado == false) { <text> class="text-warning  warning" </text> }  } }>
+
+                                        <td hidden="hidden" class="col-lg-0"></td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CertificadoId)
+                                        </td>
+                                        <td>
+                                            @item.FechaGeneracion.Date.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td>
+                                            @item.ProductoFinal.Codigo | @Html.DisplayFor(modelItem => item.ProductoFinal.Descripcion)
+                                        </td>
+
+                                        <td>
+                                            @item.NumeroOrden
+                                        </td>
+                                        <td>
+                                            @item.OrdenFinal
+                                        </td>
+
+
+
+
+                                        <td class="col col-lg-2">
+
+                                            @if (item.Liberado == false)
+                                            {
+                                                @if (User.Identity.IsAuthenticated && User.IsInRole(Perfiles.Administracion))
+                                                {
+                                                    @Html.ActionLink(" Liberar", "Liberar", new { id = item.CertificadoId }, new { onclick = "cargando();" })<text>|</text>
+                                                }
+                                            }
+                                            @if (item.ArchivoCargado == false)
+                                            {
+                                                @Html.ActionLink(" Continuar", "Editar", new { id = item.CertificadoId }, new { onclick = "cargando();" })<text>|</text>
+                                                @if (User.Identity.IsAuthenticated && User.IsInRole(Perfiles.Administracion))
+                                                {
+                                                    @Html.ActionLink(" Eliminar", "Delete", new { id = item.CertificadoId }, new { onclick = "return confirm('Desea eliminar eliminar el registro... ?');" })
+                                                }
+                                            }
+                                            else
+                                            {
+                                                @if (User.Identity.IsAuthenticated && User.IsInRole(Perfiles.Administracion))
+                                                {
+                                                    @Html.ActionLink(" Editar", "Editar", new { id = item.CertificadoId }, new { onclick = "cargando();" })<text>|</text>
+
+                                                    @Html.ActionLink(" Eliminar", "Delete", new { id = item.CertificadoId }, new { onclick = "return confirm('Desea eliminar eliminar el registro... ?');" })<text>|</text>
+                                                }
+                                                <a class="font-12 text-left" asp-action="DescargarArchivo" asp-route-id="@item.CertificadoId">Descargar</a> <text>|</text>
+                                            }
+
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <!-- end widget content -->
+
+                </div>
+                <!-- end widget div -->
+
+            </div>
+        </article>
+    </div>
+</section>
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $("#Tipo").change(function () {
+            filtar();
+        });
+
+
+
+        function filtar() {
+            $("#btBuscar").show();
+            mostrarLoadingPanel("content", "");
+            var input = $("<input>")
+                .attr("type", "hidden")
+                .attr("name", "idTipo").val($("#Tipo").val());
+            $('#fmBuscar').append(input);
+            setTimeout($("#fmBuscar").submit(), 5000);
+            $("#content").waitMe("hide");
+            $("#btBuscar").hide();
+        }
+
+
+        /* DO NOT REMOVE : GLOBAL FUNCTIONS!
+     *
+     * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
+     *
+     * // activate tooltips
+     * $("[rel=tooltip]").tooltip();
+     *
+     * // activate popovers
+     * $("[rel=popover]").popover();
+     *
+     * // activate popovers with hover states
+     * $("[rel=popover-hover]").popover({ trigger: "hover" });
+     *
+     * // activate inline charts
+     * runAllCharts();
+     *
+     * // setup widgets
+     * setup_widgets_desktop();
+     *
+     * // run form elements
+     * runAllForms();
+     *
+     ********************************
+     *
+     * pageSetUp() is needed whenever you load a page.
+     * It initializes and checks for all basic elements of the page
+     * and makes rendering easier.
+     *
+     */
+
+        pageSetUp();
+
+        /*
+         * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
+         * eg alert("my home function");
+         *
+         * var pagefunction = function() {
+         *   ...
+         * }
+         * loadScript("/js/plugin/_PLUGIN_NAME_.js", pagefunction);
+         *
+         */
+
+        // PAGE RELATED SCRIPTS
+
+        // pagefunction
+        var pagefunction = function () {
+            //console.log("cleared");
+
+            /* // DOM Position key index //
+
+                l - Length changing (dropdown)
+                f - Filtering input (search)
+                t - The Table! (datatable)
+                i - Information (records)
+                p - Pagination (paging)
+                r - pRocessing
+                < and > - div elements
+                <"#id" and > - div with an id
+                <"class" and > - div with a class
+                <"#id.class" and > - div with an id and class
+
+                Also see: http://legacy.datatables.net/usage/features
+            */
+
+            /* BASIC ;*/
+            var responsiveHelper_dt_basic = undefined;
+
+            var breakpointDefinition = {
+                tablet: 1024,
+                phone: 480
+            };
+
+            $('#dt_basic').dataTable({
+                "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
+                    "t" +
+                    "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+                "oLanguage": {
+                    "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
+
+                },
+                "autoWidth": true,
+                "preDrawCallback": function () {
+                    // Initialize the responsive datatables helper once.
+                    if (!responsiveHelper_dt_basic) {
+                        responsiveHelper_dt_basic =
+                            new ResponsiveDatatablesHelper($('#dt_basic'), breakpointDefinition);
+                    }
+                },
+                "rowCallback": function (nRow) {
+                    responsiveHelper_dt_basic.createExpandIcon(nRow);
+                },
+                "drawCallback": function (oSettings) {
+                    responsiveHelper_dt_basic.respond();
+                }
+            });
+            $("div.toolbar")
+                .html(
+                    '<div class="text-right"><img src="/img/logo.png" alt="SmartAdmin" style="width: 111px; margin-top: 3px; margin-right: 10px;"></div>');
+
+            // Apply the filter
+            $("#datatable_fixed_column thead th input[type=text]").on('keyup change',
+                function () {
+
+                    otable
+                        .column($(this).parent().index() + ':visible')
+                        .search(this.value)
+                        .draw();
+
+                });
+        };
+
+        // load related plugins
+
+        loadScript("/js/plugin/datatables/jquery.dataTables.min.js",
+            function () {
+                loadScript("/js/plugin/datatables/dataTables.colVis.min.js",
+                    function () {
+                        loadScript("/js/plugin/datatables/dataTables.tableTools.min.js",
+                            function () {
+                                loadScript("/js/plugin/datatables/dataTables.bootstrap.min.js",
+                                    function () {
+                                        loadScript("/js/plugin/datatable-responsive/datatables.responsive.min.js",
+                                            pagefunction);
+                                    });
+                            });
+                    });
+            });
+
+
+    </script>
+}

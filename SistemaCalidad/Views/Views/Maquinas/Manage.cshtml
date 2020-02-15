@@ -1,0 +1,49 @@
+﻿@model SistemaCalidad.Models.Maquina
+<div class="row">
+   
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="well no-padding">
+
+            <form  asp-action="Manage" method="post" novalidate="novalidate" class="smart-form client-form">
+                <header>
+                    @ViewData["accion"] M&aacute;quina
+                </header>
+                @{ 
+                    if (Model != null)
+                    { 
+                        <input type="hidden" asp-for="MaquinaId" />
+                    }
+                }
+
+                <fieldset>
+                    <section>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    </section>
+
+                    <section>
+                        <label class="label">Descripci&oacute;n m&aacute;quina: </label>
+                        <label class="input">
+                            <i class="icon-append fa fa-pencil-square-o"></i>
+                            <input type="text" asp-for="NombreMaquina" placeholder="Descripción">
+                            <b class="tooltip tooltip-bottom-right">Ingrese el nombre o descripci&oacute;n de la m&aacute;quina </b>
+                            <span asp-validation-for="NombreMaquina" class="text-danger"></span>
+                        </label>
+                    </section>
+
+                </fieldset>
+
+                <footer>
+                    <button type="submit" id="btn-guardar" class="btn btn-primary">
+                        Guardar
+                    </button>
+                    <a asp-action="Index" onclick="cargando()" class="btn btn-default"><strong> Cancelar </strong></a>
+                </footer>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- /.modal -->
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,334 @@
+@model SistemaCalidad.Models.Analisis
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-9 ">
+        
+    </div>
+    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-3">
+        <ul id="sparks">
+            <li class="sparks-info">
+                <a class="btn btn-primary" onclick="cargando()" asp-action="Index"><i class="fa fa-arrow-left"></i> Regresar </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3">
+        <div class="well padding-10">
+            <h5 class="margin-top-0"><b> Materiales</b></h5>
+            <div class="row">
+
+                <div class="col-lg-12">
+
+                    <ul class="list-group no-margin">
+                        @foreach (var item in Model.AnalisisMaterial)
+                        {
+                            <li class="list-group-item">
+                                <a href=""><legend> @item.Materia.TipoMaterial.DescripcionTipoMaterial </legend> </a>
+                                <a href="">C&oacute;digo:   @item.Materia.CodigoIngreso  </a>
+                                <br />
+                                <br />
+                                <a href="">Unidad de medida:   @item.Materia.UnidadMedida  </a>
+                                <br />
+                                <br />
+                                <a href=""><b> Proveedor </b> </a>
+                                <hr />
+                                <a href="">Nombre: @item.Materia.Proveedor.NombreProveedor </a>
+                                <br />
+                                <br />
+                                <a href="">C&oacute;digo:   @item.Materia.Proveedor.CodigoProveedor  </a>
+                                <br />
+                                <hr />
+                            </li>
+                        }
+
+                    </ul>
+
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+    <div class="col-sm-9">
+        <div class="well padding-10">
+            <div class="row margin-top-10">
+
+                <div class="col-md-6">
+                    <ul class="list-group no-margin padding-10">
+                        <li class="list-group-item col col-lg-12">
+                            <h3>
+                                <a href="javascript:void(0);"><b>Orden: @Model.NumeroOrden</b></a>
+                            </h3>
+
+                            <hr />
+                            <div class="form-group row">
+
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b>Fecha: </b></label>
+                                <div class="col-sm-10">
+                                    <label for="staticEmail" class="col-md-2 col-form-label">@Model.FechaAnalisis.Date.ToString("dd/MMMM/yyyy")</label>
+                                </div>
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b>Responsable: </b></label>
+                                <div class="col-sm-10">
+                                    <label for="staticEmail" class="col-md-2 col-form-label">NA</label>
+                                </div>
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b>Turno: </b></label>
+                                <div class="col-sm-10">
+                                    <label for="staticEmail" class="col-md-2 col-form-label">@Model.Turno</label>
+                                </div>
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b>Rollo: </b></label>
+                                <div class="col-sm-10">
+                                    <label for="staticEmail" class="col-md-2 col-form-label">@Model.Rollo</label>
+                                </div>
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b>Temperatura: </b></label>
+                                <div class="col-sm-10">
+                                    <label for="staticEmail" class="col-md-2 col-form-label">@Model.Temperatura ℃</label>
+                                </div>
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b>M&aacute;quina: </b></label>
+                                <div class="col-md-10">
+                                    <label for="staticEmail" class="col-md-6 col-form-label">@Model.Maquina.NombreMaquina</label>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6">
+                    <ul class="list-group no-margin padding-10">
+                        <li class="list-group-item col col-lg-12">
+                            <h3>
+                                <a href="javascript:void(0);"> <b>@Model.Producto.DescripcionProducto</b></a>
+                            </h3>
+                            <hr />
+                            <div class="form-group row">
+
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b>Clasificaci&oacute;n: </b></label>
+                                <div class="col-sm-10">
+                                    <label for="staticEmail" class="col-md-2 col-form-label">@Model.Producto.ClaseProducto.ClaseDescripcion</label>
+                                </div>
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b>Grado: </b></label>
+                                <div class="col-sm-10">
+                                    <label for="staticEmail" class="col-md-2 col-form-label">@Model.Producto.Grado</label>
+                                </div>
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b>Di&aacute;metro: </b></label>
+                                <div class="col-sm-10">
+                                    <label for="staticEmail" class="col-md-2 col-form-label">@Model.Producto.Nominal &nbsp;</label>
+                                </div>
+
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b>Resultado: </b></label>
+                                <div class="col-sm-10">
+                                    <label for="staticEmail" class="col-md-4 col-form-label">
+                                        @if (Model.Resultado == "CUMPLE")
+                                        {
+                                            <i class="text-success">Aprobado</i>
+                                        }
+                                        else
+                                        {
+                                            <i class="text-danger">No aprobado</i>
+
+                                        }
+
+                                    </label>
+                                    <label for="staticEmail" class="col-md-1 col-form-label">
+                                        @if (Model.Resultado == "CUMPLE")
+                                        {
+                                            <i class="text-success">
+
+                                                <i class="glyphicon glyphicon-thumbs-up"></i>
+
+                                            </i>
+                                        }
+                                        else
+                                        {
+                                            <i class="text-danger">
+
+                                                <i class="glyphicon glyphicon-thumbs-down"></i>
+
+                                            </i>
+
+                                        }
+
+                                    </label>
+
+                                </div>
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b>Cliente: </b></label>
+                                <div class="col-md-10">
+                                    <label for="staticEmail" class="col-md-6 col-form-label">@Model.Cliente.NombreCliente</label>
+                                </div>
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b></b></label>
+                                <div class="col-md-10">
+                                    <label for="staticEmail" class="col-md-6 col-form-label"></label>
+                                </div>
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b></b></label>
+                                <div class="col-md-10">
+                                    <label for="staticEmail" class="col-md-6 col-form-label"></label>
+                                </div>
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b></b></label>
+                                <div class="col-md-10">
+                                    <label for="staticEmail" class="col-md-6 col-form-label"></label>
+                                </div>
+                                <label for="staticEmail" class="col-md-2 col-form-label"> <b></b></label>
+                                <div class="col-md-10">
+                                    <label for="staticEmail" class="col-md-6 col-form-label"></label>
+                                </div>
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <p>
+
+                </p>
+                @*<div class="col-md-8 padding-left-0">
+
+                <p class="JustifyFull">
+                    @Model.Observaciones
+                </p>
+            </div>*@
+            </div>
+
+            <div class="row margin-top-10">
+
+                <div class="col-md-12">
+                    <ul class="list-group no-margin padding-10">
+                        <li class="list-group-item col col-lg-12">
+                            <h6>
+                                <a href="javascript:void(0);"><b>Observaciones</b></a>
+                            </h6>
+
+                            <hr />
+                            <div class="form-group row">
+                                <div class="col-md-10">
+                                    <label for="staticEmail" class="col-md-10 col-form-label">@Model.Observaciones</label>
+                                </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                <div class="col-md-12">
+                    <ul class="list-group no-margin padding-10">
+                        <li class="list-group-item col col-lg-12">
+
+                            <table class="table table-striped table-forum">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center hidden-xs hidden-sm">Especificación</th>
+
+                                        <th class="text-center hidden-xs hidden-sm">Mínimo</th>
+
+                                        <th class="text-center hidden-xs hidden-sm">Máximo</th>
+
+                                        <th class="text-center hidden-xs hidden-sm">Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.DetalleAnalisis)
+                                    {
+                                        var valoresminimoMaximo = item.RangoReferenciaActual.Split("|");
+                                        <tr @if (item.Aprobado == true) { <text> class="text-success" </text>  } else { <text> class="text-danger" </text> }>
+                                            @if (item.Aprobado == true)
+                                            {
+                                                <td class="text-left"><i class="glyphicon glyphicon-thumbs-up fa-2x text-success"></i> @item.Especificacion.Descripcion</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-left"><i class="glyphicon glyphicon-thumbs-down fa-2x text-danger"></i> @item.Especificacion.Descripcion</td>
+                                            }
+
+                                            <td class="text-center">@valoresminimoMaximo[0]</td>
+                                            <td class="text-center"> @valoresminimoMaximo[1]</td>
+                                            <td class='text-center'>@item.Resultado</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            </li>
+                        </ul>
+
+                </div>
+
+                                </div>
+                            </div>
+                </div>
+
+
+
+            </div>
+
+
+            <!-- end row -->
+            @section Scripts {
+                <script type="text/javascript">
+                    /* DO NOT REMOVE : GLOBAL FUNCTIONS!
+                 *
+                 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
+                 *
+                 * // activate tooltips
+                 * $("[rel=tooltip]").tooltip();
+                 *
+                 * // activate popovers
+                 * $("[rel=popover]").popover();
+                 *
+                 * // activate popovers with hover states
+                 * $("[rel=popover-hover]").popover({ trigger: "hover" });
+                 *
+                 * // activate inline charts
+                 * runAllCharts();
+                 *
+                 * // setup widgets
+                 * setup_widgets_desktop();
+                 *
+                 * // run form elements
+                 * runAllForms();
+                 *
+                 ********************************
+                 *
+                 * pageSetUp() is needed whenever you load a page.
+                 * It initializes and checks for all basic elements of the page
+                 * and makes rendering easier.
+                 *
+                 */
+
+                    pageSetUp();
+
+                    /*
+                    * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
+                    * eg alert("my home function");
+                    *
+                    * var pagefunction = function() {
+                    *   ...
+                    * }
+                    * loadScript("/js/plugin/_PLUGIN_NAME_.js", pagefunction);
+                    *
+                    * TO LOAD A SCRIPT:
+                    * var pagefunction = function (){
+                    *  loadScript(".../plugin.js", run_after_loaded);
+                    * }
+                    *
+                    * OR you can load chain scripts by doing
+                    *
+                    * loadScript(".../plugin.js", function(){
+                    * 	 loadScript("../plugin.js", function(){
+                    * 	   ...
+                    *   })
+                    * });
+                    */
+
+                    // pagefunction
+
+                    var pagefunction = function () {
+                        // clears the variable if left blank
+
+                    };
+
+                    // end pagefunction
+
+                    // run pagefunction
+                    pagefunction();
+
+                </script>
+            }

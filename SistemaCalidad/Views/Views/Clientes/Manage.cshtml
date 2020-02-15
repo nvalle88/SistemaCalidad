@@ -1,0 +1,58 @@
+﻿@model SistemaCalidad.Models.Cliente
+<div class="row">
+   
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="well no-padding">
+
+            <form asp-action="Manage" method="post" novalidate="novalidate" class="smart-form client-form">
+                <header>
+                    @ViewData["accion"] Cliente
+                </header>
+                @{
+                    if (Model != null)
+                    {
+                        <input type="hidden" asp-for="ClienteId" />
+                    }
+                }
+               
+                <fieldset>
+                    <section>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    </section>
+
+                    <section class="col col-lg-6" >
+                        <label class="label">Código</label>
+                        <label class="input">
+                            <i class="icon-append fa fa-pencil-square-o"></i>
+                            <input type="text" asp-for="CodigoCliente" placeholder="Código">
+                            <b class="tooltip tooltip-bottom-right">Ingrese el c&oacute;digo del Cliente</b>
+                            <span asp-validation-for="CodigoCliente" class="text-danger"></span>
+                        </label>
+                    </section>
+
+                    <section class="col col-lg-6" >
+                        <label class="label">Nombre y apellidos</label>
+                        <label class="input">
+                            <i class="icon-append fa fa-pencil-square-o"></i>
+                            <input type="text" asp-for="NombreCliente" placeholder="Ingrese Nombres y apellidos">
+                            <b class="tooltip tooltip-bottom-right">Ingrese el nombres del Cliente</b>
+                            <span asp-validation-for="NombreCliente" class="text-danger"></span>
+                        </label>
+                    </section>
+                </fieldset>
+
+                <footer>
+                    <button type="submit" id="btn-guardar" class="btn btn-primary">
+                        Guardar
+                    </button>
+                    <a asp-action="Index" onclick="cargando()" class="btn btn-default"><strong> Cancelar </strong></a>
+                </footer>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- /.modal -->
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

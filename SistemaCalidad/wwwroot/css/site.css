@@ -1,0 +1,45 @@
+div.validation-summary-valid {
+    display: none;
+}
+.ladda-spinner {
+    position: relative;
+    bottom: 9px;
+}
+
+.bs-example {
+    background-color: #fafafa;
+    border-color: #e5e5e5 #eee #eee;
+    border-style: solid;
+    border-width: 1px;
+    margin: 0 0px 15px;
+    padding: 15px 15px 15px;
+    position: relative;
+}
+
+
+button.btn.btn-default.btn-secondary.fileinput-remove.fileinput-remove-button {
+    height: 32px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+div.input-group.file-caption-main > div.input-group-btn > div {
+    height: 32px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 7px;
+}
+
+div.file-caption.form-control.kv-fileinput-caption.icon-visible > input {
+    padding-top: 7px !important;
+    padding-left: 30px !important;
+}
+
+div.file-caption.form-control.kv-fileinput-caption.icon-visible > span {
+    padding-top: 7px !important;
+}
+
+div.file-caption.form-control.kv-fileinput-caption > input {
+    padding-top: 7px !important;
+    padding-left: 5px !important;
+}

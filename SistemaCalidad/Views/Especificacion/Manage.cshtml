@@ -1,0 +1,153 @@
+﻿@model SistemaCalidad.Models.Especificacion
+@using SistemaCalidad.Utils
+
+@section Migas{
+    <li><a asp-action="Index" onclick="cargando()">Especificaciones</a></li>
+    <li class="active">@ViewData["accion"] </li>
+}
+
+@if (Model.NoEditable == true)
+{<div class="col col-lg-12">
+        <div class="col col-12 alert alert-block alert-danger">
+            <h4 class="alert-heading"><i class="fa fa-check-square-o"></i> ALERTA!</h4>
+            <p>
+                La especificaci&oacute;n no se puede cambiar de tipo ya que existen Productos o Normas que lo utilizan,
+                si desea cambiar el tipo primero debe eliminar esta especificaci&oacute;n en los Productos y Norma que aparezca!
+            </p>
+        </div>
+    </div>
+}
+
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-9 margin-top-0">
+        <h1 class="page-title text-align-center txt-color-blueDark">
+            <b>   &nbsp;</b>
+        </h1>
+    </div>
+    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-3 margin-top-0">
+        <ul id="sparks">
+            <li class="sparks-info">
+                <a class="btn btn-primary" onclick="cargando()" asp-action="Index"><i class="fa fa-arrow-left"></i> Regresar </a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="well no-padding">
+
+            <form asp-action="Manage" method="post" novalidate="novalidate" class="smart-form client-form">
+                <header>
+                    <b> @ViewData["accion"] Especificaci&oacute;n</b>
+                </header>
+                @{
+                    if (Model != null)
+                    {
+                        <input type="hidden" asp-for="EspecificacionId" />
+                    }
+                }
+
+                        <fieldset>
+                            <section>
+                                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                            </section>
+
+                            <section class="col col-lg-4">
+                                <label class="label">Descripci&oacute;n</label>
+                                <label class="input">
+                                    <i class="icon-append fa fa-pencil-square-o"></i>
+                                    <input type="text" asp-for="Descripcion" placeholder="Descripción">
+                                    <b class="tooltip tooltip-bottom-right">Ingrese la Descripci&oacute;n</b>
+                                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                                </label>
+                            </section>
+                            <section class="col col-lg-4">
+                                <label class="label">Descripci&oacute;n Ingl&eacute;s</label>
+                                <label class="input">
+                                    <i class="icon-append fa fa-pencil-square-o"></i>
+                                    <input type="text" asp-for="DescripcionIngles" placeholder="Descripción">
+                                    <b class="tooltip tooltip-bottom-right">Ingrese la Descripci&oacute;n en Ingl&eacute;s</b>
+                                    <span asp-validation-for="DescripcionIngles" class="text-danger"></span>
+                                </label>
+                            </section>
+                            <section class="col col-lg-2">
+                                <label class="label">Clase</label>
+                                <div class="form-group">
+                                    <div class="input">
+                                        <select asp-for="ClaseEspecificacion" class="form-control select2">
+                                            <option value="General">General</option>
+                                            <option value="Barras y Pletinas">Barras y Pletinas</option>
+                                            <option value="Claveria">Claveria</option>
+                                            <option value="Mallas">Mallas</option>
+                                            <option value="Puas">Puas</option>
+                                            <option value="Química">Química</option>
+                                            <option value="Material">Material</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="col col-lg-2">
+                                <label class="label">Tipo</label>
+                                <div class="form-group">
+
+                                    @if (Model.NoEditable == true)
+                                    {
+                                        <div class="input">
+                                            <select disabled asp-for="TipoEspecificacion" class="form-control select2">
+                                                <option value="Rango">@{@ConstanteEspecificaciones.Rango}</option>
+                                                <option value="Texto">@{@ConstanteEspecificaciones.Texto}</option>
+                                                <option value="Número">@{@ConstanteEspecificaciones.Numero}</option>
+                                                <option value="Bit">@{@ConstanteEspecificaciones.Bit}</option>
+                                            </select>
+                                            <input type="hidden" asp-for="TipoEspecificacion">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="input">
+                                            <select asp-for="TipoEspecificacion" class="form-control select2">
+                                                <option value="Rango">@{@ConstanteEspecificaciones.Rango}</option>
+                                                <option value="Texto">@{@ConstanteEspecificaciones.Texto}</option>
+                                                <option value="Número">@{@ConstanteEspecificaciones.Numero}</option>
+                                                <option value="Bit">@{@ConstanteEspecificaciones.Bit}</option>
+                                            </select>
+                                            <input type="hidden" asp-for="TipoEspecificacion">
+                                        </div>
+                                    }
+
+
+
+
+                                </div>
+                            </section>
+
+                            <section class="col col-lg-1">
+                                <label class="label">¿ An&aacute;lisis ?</label>
+                                <span class="onoffswitch">
+                                    <input type="checkbox" checked="@Model.Analisis" asp-for="Analisis" class="onoffswitch-checkbox" id="st11(@Model.Analisis)">
+                                    <label class="onoffswitch-label" asp-for="Analisis" for="st11(@Model.Analisis)">
+                                        <span class="onoffswitch-inner" data-swchon-text="Si" data-swchoff-text="No"></span>
+                                        <span class="onoffswitch-switch">
+                                        </span>
+                                    </label>
+                                </span>
+                            </section>
+                        </fieldset>
+
+                <footer>
+                    <button type="submit" id="btn-guardar" class="btn btn-primary">
+                        Guardar
+                    </button>
+                    <a asp-action="Index" onclick="cargando()" class="btn btn-default"><strong> Cancelar </strong></a>
+                </footer>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- /.modal -->
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

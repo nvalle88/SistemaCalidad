@@ -1,0 +1,377 @@
+@inject IOptions<SmartSettings> Settings
+@inject UserManager<ApplicationUser> UserManager
+@using SistemaCalidad.Utils
+@using SistemaCalidad.Extensions
+<!-- Left panel : Navigation area -->
+<!-- Note: This width of the aside area can be adjusted through LESS variables -->
+<aside id="left-panel">
+    <!-- User info -->
+    <div class="login-info">
+        <span>
+            <a href="javascript:void(0);">
+                @{var user = await UserManager.FindByEmailAsync(User.Identity.Name);}
+                <span class="col col-lg-12">@user.Name @user?.LastName</span>
+            </a>
+        </span>
+    </div>
+    <nav>
+        <ul>
+            @if (User.Identity.IsAuthenticated && User.IsInRole(Perfiles.Administracion))
+            {
+                <li is-active-route asp-controller="Users">
+                    <a href="#" title="Administrar">
+                        <i class="fa fa-lg fa-fw fa-lock"></i> <span class="menu-item-parent"> Seguridades</span>
+                    </a>
+                    <ul>
+                        <li is-active-route asp-controller="Account" asp-action="Index">
+                            <a asp-controller="Users" onclick="cargando()" asp-action="Index" title="Usuarios">
+                                <i class=""></i> <span>Usuarios</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            }
+
+            @if (User.Identity.IsAuthenticated && ( User.IsInRole(Perfiles.Administracion) || User.IsInRole(Perfiles.Planificacion)))
+            {
+                <li is-active-route asp-controller="Manage">
+                    <a href="#" title="Maestros">
+                        <i class="fa fa-lg fa-fw fa-table"></i> <span class="menu-item-parent"> Maestros</span>
+                    </a>
+                    <ul>
+                        @if (User.Identity.IsAuthenticated && (User.IsInRole(Perfiles.Administracion)))
+                        {
+                            <li is-active-route asp-controller="Especificaciones">
+                                <a asp-controller="Especificacion" onclick="cargando()" asp-action="Index" title="Especificaciones">
+                                    <span class="">Especificaci&oacute;n</span>
+                                </a>
+                            </li>
+                        }
+                        @if (User.Identity.IsAuthenticated && User.IsInRole(Perfiles.Administracion))
+                        {
+                            <li is-active-route asp-controller="Productos">
+                                <a href="#" title="Productos">
+                                    <span class="">Productos     </span>
+                                </a>
+                                <ul>
+
+                                    <li is-active-route asp-controller="Productos">
+                                        <a asp-controller="ClaseProducto" onclick="cargando()" asp-action="Index" title="Clase Producto">
+                                            <span class="">Clase Producto      </span>
+                                        </a>
+                                    </li>
+
+                                    <li is-active-route asp-controller="Productos">
+                                        <a asp-controller="Productos" onclick="cargando()" asp-action="Index" title="Producto">
+                                            <span class="">Producto      </span>
+                                        </a>
+                                    </li>
+                                    <li is-active-route asp-controller="ProductosFineles">
+                                        <a asp-controller="ProductosFinales" onclick="cargando()" asp-action="Index" title="Producto Finales">
+                                            <span class="">Producto  Final    </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        @if (User.Identity.IsAuthenticated && (User.IsInRole(Perfiles.Administracion) || User.IsInRole(Perfiles.Planificacion)))
+                        {
+                            <li is-active-route asp-controller="Materiales">
+                                <a href="#" title="Materiales">
+                                    <span class="">Materias Primas      </span>
+                                </a>
+                                <ul>
+                                    @if (User.Identity.IsAuthenticated && User.IsInRole(Perfiles.Administracion))
+                                    {
+                                        <li is-active-route asp-controller="Materiales">
+                                            <a asp-controller="TipoNorma" onclick="cargando()" asp-action="Index" title="Tipo de Norma">
+                                                <span class="">Tipo Norma    </span>
+                                            </a>
+                                        </li>
+                                        <li is-active-route asp-controller="TipoMaterial">
+                                            <a asp-controller="TipoMaterial" onclick="cargando()" asp-action="Index" title="Tipo de Materia Prima">
+                                                <span class="">Tipo de Materia Prima</span>
+                                            </a>
+                                        </li>
+                                        <li is-active-route asp-controller="Materiales">
+                                            <a asp-controller="Materiales" onclick="cargando()" asp-action="Index" title="Materia Prima">
+                                                <span class="">Materia Prima    </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (User.Identity.IsAuthenticated && (User.IsInRole(Perfiles.Planificacion) || User.IsInRole(Perfiles.Administracion)))
+                                    {
+                                        <li is-active-route asp-controller="Materiales">
+                                            <a asp-controller="StockMaterial" onclick="cargando()" asp-action="Index" title="Stock">
+                                                <span class="">Stock    </span>
+                                            </a>
+                                        </li>
+                                    }
+
+                                </ul>
+                            </li>
+                        }
+                        @if (User.Identity.IsAuthenticated && User.IsInRole(Perfiles.Administracion))
+                        {
+                            <li is-active-route asp-controller="Proveedors">
+                                <a asp-controller="Proveedors" onclick="cargando()" asp-action="Index" title="Proveedores">
+                                    <span class="">Proveedores</span>
+                                </a>
+                            </li>
+
+
+                            <li is-active-route asp-controller="Clientes">
+                                <a asp-controller="Clientes" onclick="cargando()" asp-action="Index" title="Clientes">
+                                    <span class="">Clientes</span>
+                                </a>
+                            </li>
+
+
+                            <li is-active-route asp-controller="Maquinas">
+                                <a asp-controller="Maquinas" onclick="cargando()" asp-action="Index" title="M&aacute;quinas">
+                                    <span class="">M&aacute;quinas</span>
+                                </a>
+                            </li>
+
+                            <li is-active-route asp-controller="Pais">
+                                <a asp-controller="Pais" onclick="cargando()" asp-action="Index" title="Paises">
+                                    <span class="">Paises</span>
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+                </li>
+            }
+
+            @if (User.Identity.IsAuthenticated && (User.IsInRole(Perfiles.Administracion) || User.IsInRole(Perfiles.Laboratorio)))
+            {
+                <li is-active-route asp-controller="Analisis">
+                    <a href="#" title="Analisis">
+                        <i class="fa fa-lg fa-fw fa-search"></i> <span class="menu-item-parent">An&aacute;lisis</span>
+                    </a>
+                    <ul>
+                        <li is-active-route asp-controller="Analisis" asp-action="Index">
+                            <a asp-controller="Analisis" onclick="cargando()" asp-action="Index" title="Estudio">
+                                <span>Estudios</span>
+                            </a>
+                        </li>
+                        <li is-active-route asp-controller="Analisis" asp-action="Index">
+                            <a asp-controller="Analisis" onclick="cargando()" asp-action="Create" title="Nuevo Estudio">
+                                <span>Nuevo Estudios</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+            }
+            @if (User.Identity.IsAuthenticated && (User.IsInRole(Perfiles.Administracion) || User.IsInRole(Perfiles.Gestion)))
+            {
+                <li is-active-route asp-controller="Analisis">
+                    <a href="#" title="Analisis">
+                        <i class="fa fa-lg fa-fw fa-file-pdf-o"></i> <span class="menu-item-parent">Certificados</span>
+                    </a>
+                    <ul>
+                        <li is-active-route asp-controller="Analisis" asp-action="Index">
+                            <a asp-controller="Certificado" onclick="cargando()" asp-action="Index" title="Estudio">
+                                <span>Certificado</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+            }
+
+                <li is-active-route asp-controller="Graphs">
+                    <a href="#">
+                        <i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">Reportes</span>
+                    </a>
+                    <ul>
+                        <li is-active-route asp-controller="Analisis" asp-action="Index">
+                            <a asp-controller="Report" asp-action="RepCompatibilidadMateriaPrima" target="_blank" title="Materias primas que aplican a un producto">
+                                <span>Compatibilidad de Materia Prima con Productos</span>
+                            </a>
+                        </li>
+                        <li is-active-route asp-controller="Analisis" asp-action="Index">
+                            <a asp-controller="Report" asp-action="RepAnalisis" target="_blank" title="Reporte de An&aacute;lisis">
+                                <span>An&aacute;lisis</span>
+                            </a>
+                        </li>
+                        <li is-active-route asp-controller="Analisis" asp-action="Index">
+                            <a asp-controller="Report" asp-action="RepAlambonesProducto" target="_blank" title="Alambrones Productos">
+                                <span>Alambrones Productos</span>
+                            </a>
+                        </li>
+                        ----
+                        <li is-active-route asp-controller="Analisis" asp-action="Index">
+                            <a asp-controller="Report" asp-action="RepMateriaPrima" target="_blank" title="Reporte de Materia Prima">
+                                <span>Materia Prima</span>
+                            </a>
+                        </li>
+
+                        <li is-active-route asp-controller="Analisis" asp-action="Index">
+                            <a asp-controller="Report" asp-action="RepProductos" target="_blank" title="Productos">
+                                <span>Productos</span>
+                            </a>
+                        </li>
+
+                        <li is-active-route asp-controller="Analisis" asp-action="Index">
+                            <a asp-controller="Report" asp-action="RepCompatibilidadMateriaEspec" target="_blank" title="Compatibilidad de Materia Prima y Especificaciones">
+                                <span>Compatibilidad de Materia Prima y Especificaciones</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                @*<li class="chat-users top-menu-invisible">
+                <a href="#">
+                    <i class="fa fa-lg fa-fw fa-comment-o">
+                        <em class="bg-color-pink flash animated">!</em>
+                    </i> <span class="menu-item-parent">Smart Chat API <sup>beta</sup></span>
+                </a>
+                <ul>
+                    <li>
+                        <!-- DISPLAY USERS -->
+                        <div class="display-users">
+
+                            <input class="form-control chat-user-filter" placeholder="Filter" type="text">
+
+                            <a href="#" class="usr"
+                               data-chat-id="cha1"
+                               data-chat-fname="Sadi"
+                               data-chat-lname="Orlaf"
+                               data-chat-status="busy"
+                               data-chat-alertmsg="Sadi Orlaf is in a meeting. Please do not disturb!"
+                               data-chat-alertshow="true"
+                               data-rel="popover-hover"
+                               data-placement="right"
+                               data-html="true"
+                               data-content="
+                                            &lt;div class=&#39;usr-card&#39;&gt;
+                                                &lt;img src=&#39;img/avatars/5.png&#39; alt=&#39;Sadi Orlaf&#39;&gt;
+                                                &lt;div class=&#39;usr-card-content&#39;&gt;
+                                                    &lt;h3&gt;Sadi Orlaf&lt;/h3&gt;
+                                                    &lt;p&gt;Marketing Executive&lt;/p&gt;
+                                                &lt;/div&gt;
+                                            &lt;/div&gt;
+                                        ">
+                                <i></i>Sadi Orlaf
+                            </a>
+
+                            <a href="#" class="usr"
+                               data-chat-id="cha2"
+                               data-chat-fname="Jessica"
+                               data-chat-lname="Dolof"
+                               data-chat-status="online"
+                               data-chat-alertmsg=""
+                               data-chat-alertshow="false"
+                               data-rel="popover-hover"
+                               data-placement="right"
+                               data-html="true"
+                               data-content="
+                                            &lt;div class=&#39;usr-card&#39;&gt;
+                                                &lt;img src=&#39;img/avatars/1.png&#39; alt=&#39;Jessica Dolof&#39;&gt;
+                                                &lt;div class=&#39;usr-card-content&#39;&gt;
+                                                    &lt;h3&gt;Jessica Dolof&lt;/h3&gt;
+                                                    &lt;p&gt;Sales Administrator&lt;/p&gt;
+                                                &lt;/div&gt;
+                                            &lt;/div&gt;
+                                        ">
+                                <i></i>Jessica Dolof
+                            </a>
+
+                            <a href="#" class="usr"
+                               data-chat-id="cha3"
+                               data-chat-fname="Zekarburg"
+                               data-chat-lname="Almandalie"
+                               data-chat-status="online"
+                               data-rel="popover-hover"
+                               data-placement="right"
+                               data-html="true"
+                               data-content="
+                                            &lt;div class=&#39;usr-card&#39;&gt;
+                                                &lt;img src=&#39;img/avatars/3.png&#39; alt=&#39;Zekarburg Almandalie&#39;&gt;
+                                                &lt;div class=&#39;usr-card-content&#39;&gt;
+                                                    &lt;h3&gt;Zekarburg Almandalie&lt;/h3&gt;
+                                                    &lt;p&gt;Sales Admin&lt;/p&gt;
+                                                &lt;/div&gt;
+                                            &lt;/div&gt;
+                                        ">
+                                <i></i>Zekarburg Almandalie
+                            </a>
+
+                            <a href="#" class="usr"
+                               data-chat-id="cha4"
+                               data-chat-fname="Barley"
+                               data-chat-lname="Krazurkth"
+                               data-chat-status="away"
+                               data-rel="popover-hover"
+                               data-placement="right"
+                               data-html="true"
+                               data-content="
+                                            &lt;div class=&#39;usr-card&#39;&gt;
+                                                &lt;img src=&#39;img/avatars/4.png&#39; alt=&#39;Barley Krazurkth&#39;&gt;
+                                                &lt;div class=&#39;usr-card-content&#39;&gt;
+                                                    &lt;h3&gt;Barley Krazurkth&lt;/h3&gt;
+                                                    &lt;p&gt;Sales Director&lt;/p&gt;
+                                                &lt;/div&gt;
+                                            &lt;/div&gt;
+                                        ">
+                                <i></i>Barley Krazurkth
+                            </a>
+
+                            <a href="#" class="usr offline"
+                               data-chat-id="cha5"
+                               data-chat-fname="Farhana"
+                               data-chat-lname="Amrin"
+                               data-chat-status="incognito"
+                               data-rel="popover-hover"
+                               data-placement="right"
+                               data-html="true"
+                               data-content="
+                                            &lt;div class=&#39;usr-card&#39;&gt;
+                                                &lt;img src=&#39;img/avatars/female.png&#39; alt=&#39;Farhana Amrin&#39;&gt;
+                                                &lt;div class=&#39;usr-card-content&#39;&gt;
+                                                    &lt;h3&gt;Farhana Amrin&lt;/h3&gt;
+                                                    &lt;p&gt;Support Admin &lt;small&gt;&lt;i class=&#39;fa fa-music&#39;&gt;&lt;/i&gt; Playing Beethoven Classics&lt;/small&gt;&lt;/p&gt;
+                                                &lt;/div&gt;
+                                            &lt;/div&gt;
+                                        ">
+                                <i></i>Farhana Amrin (offline)
+                            </a>
+
+                            <a href="#" class="usr offline"
+                               data-chat-id="cha6"
+                               data-chat-fname="Lezley"
+                               data-chat-lname="Jacob"
+                               data-chat-status="incognito"
+                               data-rel="popover-hover"
+                               data-placement="right"
+                               data-html="true"
+                               data-content="
+                                            &lt;div class=&#39;usr-card&#39;&gt;
+                                                &lt;img src=&#39;img/avatars/male.png&#39; alt=&#39;Lezley Jacob&#39;&gt;
+                                                &lt;div class=&#39;usr-card-content&#39;&gt;
+                                                    &lt;h3&gt;Lezley Jacob&lt;/h3&gt;
+                                                    &lt;p&gt;Sales Director&lt;/p&gt;
+                                                &lt;/div&gt;
+                                            &lt;/div&gt;
+                                        ">
+                                <i></i>Lezley Jacob (offline)
+                            </a>
+
+                            <a asp-controller="Home" asp-action="Chat" class="btn btn-xs btn-default btn-block sa-chat-learnmore-btn">About the API</a>
+
+                        </div>
+                        <!-- END DISPLAY USERS -->
+                    </li>
+                </ul>
+            </li>*@
+            </ul>
+    </nav>
+    <a asp-controller="Intel" asp-action="Variations" asp-show-when="@Settings.Value.Environment.IsDemo()" class="btn btn-primary nav-demo-btn"><i class="fa fa-info-circle"></i> SmartAdmin Package (187 MB)</a>
+    <span class="minifyme" data-action="minifyMenu">
+        <i class="fa fa-arrow-circle-left hit"></i>
+    </span>
+</aside>
+<!-- END NAVIGATION -->

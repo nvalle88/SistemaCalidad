@@ -1,0 +1,64 @@
+﻿@model SistemaCalidad.Models.TipoMaterial
+@section Migas{
+    <li><a asp-action="Index" onclick="cargando()">Tipo de Materia Prima</a></li>
+    <li class="active">@ViewData["accion"] </li>
+}
+    <div class="row">
+        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-9 margin-top-0">
+            <h1 class="page-title text-align-center txt-color-blueDark">
+                <b>   &nbsp;</b>
+            </h1>
+        </div>
+        <div class="col-xs-12 col-sm-5 col-md-5 col-lg-3 margin-top-0">
+            <ul id="sparks">
+                <li class="sparks-info">
+                    <a class="btn btn-primary" onclick="cargando()" asp-action="Index"><i class="fa fa-arrow-left"></i> Regresar </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="well no-padding">
+
+                <form asp-action="Manage" method="post" novalidate="novalidate" class="smart-form client-form">
+                    <header>
+                        <b> @ViewData["accion"] Tipo Materia Prima</b>
+                    </header>
+                    @{
+                        if (Model != null)
+                        {
+                            <input type="hidden" asp-for="TipoMaterialId" />
+                        }
+                    }
+
+                    <fieldset>
+                        <section>
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        </section>
+
+                        <section>
+                            <label class="label">Descripci&oacute;n </label>
+                            <label class="input">
+                                <i class="icon-append fa fa-pencil-square-o"></i>
+                                <input type="text" asp-for="DescripcionTipoMaterial" placeholder="Descripción">
+                                <b class="tooltip tooltip-bottom-right">Ingrese el nombre o descripci&oacute;n del tipo de material</b>
+                                <span asp-validation-for="DescripcionTipoMaterial" class="text-danger"></span>
+                            </label>
+                        </section>
+
+                    </fieldset>
+
+                    <footer>
+                        <button type="submit" id="btn-guardar" class="btn btn-primary">
+                            Guardar
+                        </button>
+                        <a asp-action="Index" onclick="cargando()" class="btn btn-default"><strong> Cancelar </strong></a>
+                    </footer>
+                </form>
+
+            </div>
+        </div>
+    </div>
+<!-- /.modal -->
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
